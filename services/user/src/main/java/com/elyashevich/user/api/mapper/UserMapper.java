@@ -4,9 +4,11 @@ import com.elyashevich.user.api.dto.UserDto;
 import com.elyashevich.user.api.dto.UserRequestDto;
 import com.elyashevich.user.domain.entity.User;
 import org.mapstruct.Mapper;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 

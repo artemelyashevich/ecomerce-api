@@ -61,6 +61,7 @@ public class ExceptionControllerAdvice {
 
     private ExceptionBody handleException(final Exception exception, final String defaultMessage) {
         var message = exception.getMessage() == null ? defaultMessage : exception.getMessage();
+        exception.printStackTrace();
         log.warn("{} '{}'.", defaultMessage, message);
         return new ExceptionBody(message);
     }
