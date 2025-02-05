@@ -11,7 +11,7 @@ public interface ProductRestClient {
 
     Product create(final Product product);
 
-    Optional<Product> findById(final Long productId);
+    Product findById(final Long productId);
 
     void update(final Long id, final Product product);
 

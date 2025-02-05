@@ -25,8 +25,8 @@ public class UserRestClientImpl implements UserRestClient {
     }
 
     @Override
-    public Optional<User> findById(Long userId) {
-        return Optional.empty();
+    public User findById(Long userId) {
+        return null;
     }
 
     @Override

@@ -11,7 +11,7 @@ public interface UserRestClient {
 
     User create(final User user);
 
-    Optional<User> findById(final Long userId);
+    User findById(final Long userId);
 
     void update(final Long userId, final User cart);
 

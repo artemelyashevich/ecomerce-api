@@ -19,6 +19,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     public static final String CATEGORY_WITH_ID_NOT_FOUND_TEMPLATE = "Category with id '%d' not found";
     public static final String CATEGORY_WITH_NAME_ALREADY_EXISTS_TEMPLATE = "Category with name '%s' already exists";
+    public static final String CATEGORY_WITH_NAME_WAS_NOT_FOUND_TEMPLATE = "Category with name '%s' was not found";
 
     private final CategoryRepository categoryRepository;
 
@@ -88,5 +89,22 @@ public class CategoryServiceImpl implements CategoryService {
         this.categoryRepository.delete(category);
 
         log.info("Deleted category with id {}", id);
+    }
+
+    @Override
+    public Category findByName(final String name) {
+        log.debug("Attempting to find category by name: {}", name);
+
+        var category = this.categoryRepository.findByName(name).orElseThrow(
+                ()-> {
+                    var message = CATEGORY_WITH_NAME_WAS_NOT_FOUND_TEMPLATE.formatted(name);
+
+                    log.warn(message);
+                    return new ResourceNotFoundException(message);
+                }
+        );
+
+        log.info("Found category with name {}", name);
+        return category;
     }
 }

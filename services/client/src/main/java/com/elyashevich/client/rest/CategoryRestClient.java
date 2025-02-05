@@ -11,7 +11,7 @@ public interface CategoryRestClient {
 
     Category create(final Category category);
 
-    Optional<Category> findById(final Long categoryId);
+    Category findById(final Long categoryId);
 
     void update(final Long categoryId, final Category category);
 

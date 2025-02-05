@@ -9,8 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.client.RestClient;
 
 import java.util.List;
-import java.util.Optional;
-
 
 @Slf4j
 @RequiredArgsConstructor
@@ -37,41 +35,58 @@ public class ProductRestClientImpl implements ProductRestClient {
 
     @Override
     public Product create(final Product product) {
-        return this.restClient
+        log.debug("Attempting to create a new product");
+
+        var newProduct = this.restClient
                 .post()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(product)
                 .retrieve()
                 .body(Product.class);
+
+        log.info("New product created");
+        return newProduct;
     }
 
     @Override
-    public Optional<Product> findById(final Long productId) {
-        return Optional.ofNullable(this.restClient
+    public Product findById(final Long productId) {
+        log.debug("Attempting to fetch product by id");
+
+        var product = this.restClient
                 .get()
                 .uri("/{productId}", productId)
                 .retrieve()
-                .body(Product.class)
-        );
+                .body(Product.class);
+
+        log.info("Product with id {} found", productId);
+        return product;
     }
 
     @Override
     public void update(final Long id, final Product product) {
+        log.debug("Attempting to update product with id {}", id);
+
         this.restClient
-                .patch()
+                .put()
                 .uri("/{productId}", id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(product)
                 .retrieve()
                 .toBodilessEntity();
+
+        log.info("Product with id {} updated", id);
     }
 
     @Override
     public void delete(final Long productId) {
+        log.debug("Attempting to delete product with id {}", productId);
+
         this.restClient
                 .delete()
                 .uri("/{productId}", productId)
                 .retrieve()
                 .toBodilessEntity();
+
+        log.info("Product with id {} deleted", productId);
     }
 }

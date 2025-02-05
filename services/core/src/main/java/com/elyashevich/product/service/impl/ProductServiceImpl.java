@@ -1,5 +1,6 @@
 package com.elyashevich.product.service.impl;
 
+import com.elyashevich.product.domain.entity.Category;
 import com.elyashevich.product.domain.entity.Product;
 import com.elyashevich.product.exception.ResourceNotFoundException;
 import com.elyashevich.product.repository.ProductRepository;
@@ -54,7 +55,12 @@ public class ProductServiceImpl implements ProductService {
     public Product create(final Product product) {
         log.debug("Attempting to create product: {}", product);
 
-        var category = this.categoryService.findById(product.getCategory().getId());
+        Category category = null;
+        if (product.getCategory().getId() != null) {
+            category = this.categoryService.findById(product.getCategory().getId());
+        } else {
+            category = this.categoryService.findByName(product.getCategory().getName());
+        }
         product.setCategory(category);
         var newProduct = this.productRepository.save(product);
 
@@ -67,7 +73,13 @@ public class ProductServiceImpl implements ProductService {
     public Product update(final Long id, final Product product) {
         log.debug("Attempting to update product with id: {}", id);
 
-        var category = this.categoryService.findById(product.getCategory().getId());
+        Category category = null;
+        if (product.getCategory().getId() != null) {
+            category = this.categoryService.findById(product.getCategory().getId());
+        } else {
+            category = this.categoryService.findByName(product.getCategory().getName());
+        }
+
         var oldProduct = this.findById(id);
         oldProduct.setName(product.getName());
         oldProduct.setDescription(product.getDescription());
