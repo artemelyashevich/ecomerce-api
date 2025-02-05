@@ -23,12 +23,11 @@ public class ProductRestClientImpl implements ProductRestClient {
     private final RestClient restClient;
 
     @Override
-    public List<Product> findAllProducts() {
+    public List<Product> findAll() {
         log.debug("Attempting to fetch all products");
 
         var products = this.restClient
                 .get()
-                .uri("/api/v1/products")
                 .retrieve()
                 .body(PARAMETERIZED_TYPE_REFERENCE);
 
@@ -37,10 +36,9 @@ public class ProductRestClientImpl implements ProductRestClient {
     }
 
     @Override
-    public Product createProduct(final Product product) {
+    public Product create(final Product product) {
         return this.restClient
                 .post()
-                .uri("/api/v1/products")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(product)
                 .retrieve()
@@ -48,20 +46,20 @@ public class ProductRestClientImpl implements ProductRestClient {
     }
 
     @Override
-    public Optional<Product> findProductById(final Long productId) {
+    public Optional<Product> findById(final Long productId) {
         return Optional.ofNullable(this.restClient
                 .get()
-                .uri("/api/v1/products/{productId}", productId)
+                .uri("/{productId}", productId)
                 .retrieve()
                 .body(Product.class)
         );
     }
 
     @Override
-    public void updateProductById(final Long id, final Product product) {
+    public void update(final Long id, final Product product) {
         this.restClient
                 .patch()
-                .uri("/api/v1/products/{productId}", id)
+                .uri("/{productId}", id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(product)
                 .retrieve()
@@ -69,10 +67,10 @@ public class ProductRestClientImpl implements ProductRestClient {
     }
 
     @Override
-    public void deleteProduct(final Long productId) {
+    public void delete(final Long productId) {
         this.restClient
                 .delete()
-                .uri("/api/v1/products/{productId}", productId)
+                .uri("/{productId}", productId)
                 .retrieve()
                 .toBodilessEntity();
     }

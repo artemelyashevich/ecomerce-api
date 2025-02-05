@@ -7,13 +7,13 @@ import java.util.Optional;
 
 public interface ProductRestClient {
 
-    List<Product> findAllProducts();
+    List<Product> findAll();
 
-    Product createProduct(final Product product);
+    Product create(final Product product);
 
-    Optional<Product> findProductById(final Long productId);
+    Optional<Product> findById(final Long productId);
 
-    void updateProductById(final Long id, final Product product);
+    void update(final Long id, final Product product);
 
-    void deleteProduct(final Long productId);
+    void delete(final Long productId);
 }
