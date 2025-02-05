@@ -1,12 +1,6 @@
 package com.elyashevich.user.domain.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -51,8 +45,10 @@ public class User {
     @Column(name = "image")
     private String image;
 
-    @Column
     @ElementCollection
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role_name")
+    @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
     public void addRole(Role role) {
