@@ -15,7 +15,7 @@ public class RestClientConfig {
             @Value("${manager.service.catalogue.uri:http://localhost:8091}") String baseUri
     ) {
         return new ProductRestClientImpl(RestClient.builder()
-                .baseUrl("http://localhost:8081")
+                .baseUrl("http://localhost:8091")
                 .build());
     }
 }

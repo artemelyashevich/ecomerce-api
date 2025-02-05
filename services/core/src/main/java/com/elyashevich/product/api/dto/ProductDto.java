@@ -6,6 +6,8 @@ import org.hibernate.validator.constraints.Length;
 
 public record ProductDto(
 
+        Long id,
+
         @NotNull(message = "Name must be not empty")
         @Length(
                 min = 2,
