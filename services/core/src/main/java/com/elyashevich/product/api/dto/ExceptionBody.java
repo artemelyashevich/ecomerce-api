@@ -1,4 +1,4 @@
-package com.elyashevich.product.domain;
+package com.elyashevich.product.api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
