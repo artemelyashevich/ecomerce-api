@@ -4,6 +4,7 @@ import com.elyashevich.user.api.dto.UserDto;
 import com.elyashevich.user.api.dto.UserRequestDto;
 import com.elyashevich.user.api.dto.contract.Validate;
 import com.elyashevich.user.api.mapper.UserMapper;
+import com.elyashevich.user.domain.entity.User;
 import com.elyashevich.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -44,8 +45,15 @@ public class UserController {
         return ResponseEntity.ok(this.userMapper.toUserDto(user));
     }
 
+    @GetMapping("/email/{email}")
+    public ResponseEntity<User> findByEmail(final @PathVariable("email") String email) {
+        var user = this.userService.findByEmail(email);
+
+        return ResponseEntity.ok(user);
+    }
+
     @PostMapping
-    public ResponseEntity<UserDto> create(
+    public ResponseEntity<User> create(
             final @Validated(Validate.class) @RequestBody UserRequestDto user,
             final UriComponentsBuilder uriComponentsBuilder
     ) {
@@ -59,7 +67,7 @@ public class UserController {
                                 .replacePath("/api/v1/users/{userId}")
                                 .build(Map.of("userId", newUser.getId()))
                 )
-                .body(this.userMapper.toUserDto(newUser));
+                .body(newUser);
     }
 
     @PutMapping("/{id}")

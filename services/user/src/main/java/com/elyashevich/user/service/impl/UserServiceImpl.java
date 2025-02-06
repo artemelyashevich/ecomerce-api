@@ -19,6 +19,8 @@ public class UserServiceImpl implements UserService {
 
     public static final String USER_WITH_ID_WAS_NOT_FOUND_TEMPLATE = "User with id '%d' was not found";
     public static final String USER_WITH_USERNAME_WAS_NOT_FOUND_TEMPLATE = "User with username '%s' was not found";
+    public static final String USER_WITH_EMAIL_S_WAS_NOT_FOUND = "User with email '%s' was not found";
+    public static final String USER_WITH_EMAIL_WAS_NOT_FOUND_TEMPLATE = USER_WITH_EMAIL_S_WAS_NOT_FOUND;
 
     private final UserRepository userRepository;
 
@@ -104,5 +106,19 @@ public class UserServiceImpl implements UserService {
         this.userRepository.delete(oldUser);
 
         log.info("Deleted user with id {}", id);
+    }
+
+    @Override
+    public User findByEmail(final String email) {
+        log.debug("Attempting to find user with email {}", email);
+        var user = this.userRepository.findByEmail(email).orElseThrow(
+                ()-> {
+                    var message = USER_WITH_EMAIL_WAS_NOT_FOUND_TEMPLATE.formatted(email);
+
+                    log.warn(message);
+                    return new ResourceNotFoundException(message);
+                }
+        );
+        return user;
     }
 }

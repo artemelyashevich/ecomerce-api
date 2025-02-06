@@ -17,4 +17,6 @@ public interface UserService {
     User update(final Long id, final User user);
 
     void delete(final Long id);
+
+    User findByEmail(final String email);
 }

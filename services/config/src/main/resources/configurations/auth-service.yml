@@ -1,0 +1,6 @@
+server:
+  port:
+    8093
+application:
+  userService:
+    baseUri: http://localhost:8092/api/v1/users
