@@ -22,6 +22,12 @@ spring:
             - Path=/api/v1/users/**
           filters:
             - CustomAuthenticationFilter
+        - id: order-service
+          uri: lb:http://order-service
+          predicates:
+            - Path=/api/v1/orders/**
+          filters:
+            - CustomAuthenticationFilter
         - id: auth-service
           uri: lb:http://auth-service
           predicates:

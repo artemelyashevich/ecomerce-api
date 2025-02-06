@@ -10,3 +10,7 @@ spring:
     database-platform: org.hibernate.dialect.MySQL8Dialect
 server:
   port: 8091
+
+application:
+  rest:
+    orderServiceUri: http://localhost:8094/api/v1/orders
