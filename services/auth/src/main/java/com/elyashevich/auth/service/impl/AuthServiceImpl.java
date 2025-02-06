@@ -26,13 +26,19 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String login(final LoginEntity loginEntity) {
+        log.debug("Attempting to login user: {}", loginEntity.getEmail());
+
         var candidate = this.userRestClient.findUserByEmail(loginEntity.getEmail());
 
         if (!this.passwordEncoder.matches(loginEntity.getPassword(), candidate.getPassword())) {
             throw new PasswordMismatchException("Password does not match");
         }
 
-        return TokenUtil.generateToken(convertToUserDetails(candidate));
+
+        var token =  TokenUtil.generateToken(convertToUserDetails(candidate));
+
+        log.info("User logged in: {}", candidate.getId());
+        return token;
     }
 
     @Override
