@@ -1,11 +1,13 @@
 package com.elyashevich.auth.service;
 
-import com.elyashevich.auth.domain.LoginEntity;
-import com.elyashevich.auth.domain.RegisterEntity;
+import com.elyashevich.auth.api.dto.LoginDto;
+import com.elyashevich.auth.api.dto.RegisterDto;
 
 public interface AuthService {
 
-    String login(final LoginEntity loginEntity);
+    String login(final LoginDto loginEntity);
 
-    String register(final RegisterEntity registerEntity);
+    String register(final RegisterDto registerEntity);
+
+    String verify(final String token);
 }

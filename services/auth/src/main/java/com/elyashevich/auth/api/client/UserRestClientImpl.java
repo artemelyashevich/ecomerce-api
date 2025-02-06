@@ -1,11 +1,10 @@
 package com.elyashevich.auth.api.client;
 
-import com.elyashevich.auth.domain.RegisterEntity;
+import com.elyashevich.auth.api.dto.RegisterDto;
 import com.elyashevich.auth.domain.UserEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.client.RestClient;
 
 @Slf4j
@@ -29,7 +28,7 @@ public class UserRestClientImpl implements UserRestClient {
     }
 
     @Override
-    public UserEntity saveUser(final RegisterEntity user) {
+    public UserEntity saveUser(final RegisterDto user) {
         log.debug("Saving user '{}'", user.getEmail());
 
         var newUser = this.restClient

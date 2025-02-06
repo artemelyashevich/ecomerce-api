@@ -1,8 +1,8 @@
 package com.elyashevich.auth.service.impl;
 
 import com.elyashevich.auth.api.client.UserRestClient;
-import com.elyashevich.auth.domain.LoginEntity;
-import com.elyashevich.auth.domain.RegisterEntity;
+import com.elyashevich.auth.api.dto.LoginDto;
+import com.elyashevich.auth.api.dto.RegisterDto;
 import com.elyashevich.auth.domain.Role;
 import com.elyashevich.auth.domain.UserEntity;
 import com.elyashevich.auth.exception.PasswordMismatchException;
@@ -25,7 +25,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public String login(final LoginEntity loginEntity) {
+    public String login(final LoginDto loginEntity) {
         var candidate = this.userRestClient.findUserByEmail(loginEntity.getEmail());
 
         if (!this.passwordEncoder.matches(loginEntity.getPassword(), candidate.getPassword())) {
@@ -36,11 +36,16 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String register(final RegisterEntity registerEntity) {
+    public String register(final RegisterDto registerEntity) {
         registerEntity.setPassword(this.passwordEncoder.encode(registerEntity.getPassword()));
         var candidate = this.userRestClient.saveUser(registerEntity);
 
         return TokenUtil.generateToken(convertToUserDetails(candidate));
+    }
+
+    @Override
+    public String verify(final String token) {
+        return TokenUtil.extractEmailClaims(token);
     }
 
     private static UserDetails convertToUserDetails(final UserEntity userEntity) {

@@ -1,0 +1,56 @@
+server:
+  port: 8222
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: core-service
+          uri: lb:http://core-service
+          predicates:
+            - Path=/api/v1/products/**
+            - Path=/api/v1/carts/**
+            - Path=/api/v1/categories/**
+          filters:
+            - CustomAuthenticationFilter
+        - id: user-service
+          uri: lb:http://user-service
+          predicates:
+            - Path=/api/v1/users/**
+          filters:
+            - CustomAuthenticationFilter
+        - id: auth-service
+          uri: lb:http://auth-service
+          predicates:
+            - Path=/api/v1/auth/**
+      cors-configurations:
+        '[/**]':
+          allowedOrigins: "*"
+          allowedHeaders:
+            - "*"
+          allowedMethods:
+            - "GET"
+            - "POST"
+            - "PUT"
+            - "DELETE"
+            - "OPTIONS"
+      default-filters:
+        - name: Retry
+          args:
+            retries: 3
+            methods: GET,POST,PUT,DELETE,OPTIONS
+
+eureka:
+  instance:
+    hostname: localhost
+
+application:
+  security:
+    authenticationServiceUri: http://auth-service/api/v1/auth/verify
+    publicUrls:
+      - api/v1/auth/login
+      - api/v1/auth/register
+      - api/v1/auth/verify

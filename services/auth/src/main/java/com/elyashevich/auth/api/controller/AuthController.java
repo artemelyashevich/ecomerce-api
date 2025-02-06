@@ -1,8 +1,11 @@
 package com.elyashevich.auth.api.controller;
 
-import com.elyashevich.auth.domain.LoginEntity;
-import com.elyashevich.auth.domain.RegisterEntity;
-import com.elyashevich.auth.domain.TokenResponse;
+import com.elyashevich.auth.api.dto.LoginDto;
+import com.elyashevich.auth.api.dto.RegisterDto;
+import com.elyashevich.auth.api.dto.TokenResponse;
+import com.elyashevich.auth.api.dto.VerifyTokenRequest;
+import com.elyashevich.auth.api.dto.VerifyTokenResponse;
+import com.elyashevich.auth.api.dto.VerifyTokenResponse;
 import com.elyashevich.auth.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +24,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> login(final @Valid @RequestBody LoginEntity loginEntity) {
+    public ResponseEntity<TokenResponse> login(final @Valid @RequestBody LoginDto loginEntity) {
         var tokenResponse = authService.login(loginEntity);
 
         return ResponseEntity
@@ -30,11 +33,19 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<TokenResponse> register(final @Valid @RequestBody RegisterEntity registerEntity) {
+    public ResponseEntity<TokenResponse> register(final @Valid @RequestBody RegisterDto registerEntity) {
         var tokenResponse = authService.register(registerEntity);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body((new TokenResponse(tokenResponse)));
+    }
+
+    @PostMapping("/verify")
+    public ResponseEntity<VerifyTokenResponse> verify(final @Valid @RequestBody VerifyTokenRequest verifyTokenRequest) {
+        var email = this.authService.verify(verifyTokenRequest.getToken());
+        return ResponseEntity
+                .accepted()
+                .body(new VerifyTokenResponse(email));
     }
 }

@@ -1,4 +1,4 @@
-package com.elyashevich.auth.domain;
+package com.elyashevich.auth.api.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -14,22 +14,7 @@ import org.hibernate.validator.constraints.Length;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RegisterEntity {
-
-    @NotNull(message = "Full name must be not null")
-    @NotEmpty(message = "Full name must be not empty")
-    @NotBlank(message = "Full name must be not blank")
-    private String fullName;
-
-    @NotNull(message = "Username must be not null")
-    @NotEmpty(message = "Username must be not empty")
-    @NotBlank(message = "Username must be not blank")
-    private String username;
-
-    @NotNull(message = "Address must be not null")
-    @NotEmpty(message = "Address must be not empty")
-    @NotBlank(message = "Address must be not blank")
-    private String address;
+public class LoginDto {
 
     @NotNull(message = "Email must be not null")
     @NotEmpty(message = "Email must be not empty")
