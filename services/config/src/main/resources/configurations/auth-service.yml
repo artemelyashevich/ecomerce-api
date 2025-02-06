@@ -3,4 +3,4 @@ server:
     8093
 application:
   userService:
-    baseUri: http://localhost:8092/api/v1/users
+    baseUri: http://localhost:8222/api/v1/users
