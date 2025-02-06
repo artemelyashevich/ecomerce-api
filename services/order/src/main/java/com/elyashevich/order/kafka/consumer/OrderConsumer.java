@@ -18,11 +18,15 @@ public class OrderConsumer {
     private final OrderService orderService;
 
     public void consumeOrderEvent(final OrderEvent event) {
+        log.debug("Consuming order event: {}", event);
+
         if (event.getEvent().equals(EventType.DELETE) && event.getStatus().equals(OrderStatus.REJECTED)) {
             this.orderService.delete(event.getOrderId());
         }
         if (event.getEvent().equals(EventType.CREATE) && event.getStatus().equals(OrderStatus.FULFILLED)) {
             this.orderService.complete(event.getOrderId());
         }
+
+        log.info("Consumed order event: {}", event);
     }
 }
