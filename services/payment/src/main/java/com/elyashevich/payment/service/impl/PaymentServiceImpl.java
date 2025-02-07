@@ -35,6 +35,7 @@ public class PaymentServiceImpl implements PaymentService {
     public void rejectPayment(final PaymentEvent event) {
         log.debug("Rejecting payment event: {}", event);
 
+        event.setEvent(EventType.DELETE);
         this.paymentProducer.sendOrderEvent(event);
 
         log.info("Event rejected: {}", event);

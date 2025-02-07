@@ -55,6 +55,7 @@ public class OrderServiceImpl implements OrderService {
     public Order create(final Order order) {
         log.debug("Attempting create order: {}", order);
 
+        order.setStatus(OrderStatus.PENDING);
         var newOrder = this.orderRepository.save(order);
         this.orderProducer.sendOrderEvent(OrderEvent.builder()
                 .orderId(newOrder.getId())

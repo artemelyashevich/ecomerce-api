@@ -18,7 +18,7 @@ import static org.apache.kafka.clients.consumer.ConsumerConfig.*;
 @Configuration
 public class KafkaConsumerConfig {
 
-    @Value("${spring.kafka.consumer.bootstrap-servers}")
+    @Value("${spring.kafka.bootstrap-servers}")
     private String kafkaServers;
 
     @Bean
