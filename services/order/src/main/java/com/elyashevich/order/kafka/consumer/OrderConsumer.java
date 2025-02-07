@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@KafkaListener(topics = "order-topic", groupId = "order-group")
+@KafkaListener(topics = "payment-topic", groupId = "payment-group")
 @RequiredArgsConstructor
 public class OrderConsumer {
 
@@ -23,7 +23,7 @@ public class OrderConsumer {
         if (event.getEvent().equals(EventType.DELETE) && event.getStatus().equals(OrderStatus.REJECTED)) {
             this.orderService.delete(event.getOrderId());
         }
-        if (event.getEvent().equals(EventType.CREATE) && event.getStatus().equals(OrderStatus.FULFILLED)) {
+        if (event.getEvent().equals(EventType.UPDATE) && event.getStatus().equals(OrderStatus.FULFILLED)) {
             this.orderService.complete(event.getOrderId());
         }
 

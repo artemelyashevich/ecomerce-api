@@ -55,6 +55,15 @@
         </processorPath>
         <module name="gateway" />
       </profile>
+      <profile name="Annotation profile for payment" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
+        </processorPath>
+        <module name="payment" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="cart" target="21" />
@@ -70,6 +79,7 @@
       <module name="core" options="-parameters" />
       <module name="gateway" options="-parameters" />
       <module name="order" options="-parameters" />
+      <module name="payment" options="-parameters" />
       <module name="registry" options="-parameters" />
       <module name="user" options="-parameters" />
     </option>
