@@ -71,5 +71,5 @@ The project follows a microservices architecture where each service is responsib
    ```sh
    
    git clone https://github.com/artemelyashevich/ecomerce-api.git
-   docker-compose build && docker-compose up -d 
+   docker-compose up --build
    ```
