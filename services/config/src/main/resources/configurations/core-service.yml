@@ -14,3 +14,6 @@ server:
 application:
   rest:
     orderServiceUri: http://localhost:8094/api/v1/orders
+  open-api:
+    email:
+    server: http://127.0.0.1:8222

@@ -10,3 +10,8 @@ spring:
     database-platform: org.hibernate.dialect.MySQL8Dialect
 server:
   port: 8092
+
+application:
+  open-api:
+    email:
+    server: http://127.0.0.1:8222

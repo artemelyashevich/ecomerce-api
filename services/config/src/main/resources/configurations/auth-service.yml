@@ -4,3 +4,6 @@ server:
 application:
   userService:
     baseUri: http://localhost:8222/api/v1/users
+  open-api:
+    email:
+    server: http://127.0.0.1:8222

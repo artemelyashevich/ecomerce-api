@@ -1,5 +1,15 @@
 version: "3.9"
 services:
+  db-shared:
+    container_name: db
+    image: mysql:latest
+    ports:
+      - "5111:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+      MYSQL_DATABASE: ecommerce
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     container_name: zookeeper
@@ -23,3 +33,119 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+
+  config-service:
+    container_name: config-service
+    build:
+      context: ./services/config
+      dockerfile: Dockerfile
+    environment:
+      SPRING_PROFILES_ACTIVE: docker,native
+    ports:
+      - "8888:8888"
+  registry-service:
+    container_name: registry-service
+    build:
+      context: ./services/registry
+      dockerfile: Dockerfile
+    depends_on:
+      - config-service
+    ports:
+      - "8761:8761"
+  gateway:
+    container_name: gateway
+    build:
+      context: ./services/gateway
+      dockerfile: Dockerfile
+    depends_on:
+      - config-service
+      - discovery-service
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    ports:
+      - "8222:8222"
+  auth-service:
+    container_name: authentication-service
+    build:
+      context: ./services/auth
+      dockerfile: Dockerfile
+    depends_on:
+      - config-service
+      - registry-service
+      - db-shared
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:mysql://db-shared:3306/ecommerce
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.MySQL8Dialect
+    ports:
+      - "8093:8093"
+  core-service:
+    container_name: core-service
+    build:
+      context: ./services/core
+      dockerfile: Dockerfile
+    depends_on:
+      - config-service
+      - discovery-service
+      - db-shared
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:mysql://db-shared:3306/db
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.MySQL8Dialect
+      APPLICATION_OPEN_API_EMAIL: elyashevich.artem06@gmail.com
+    ports:
+      - "8091:8091"
+  user-service:
+    container_name: user-service
+    build:
+      context: ./services/user
+      dockerfile: Dockerfile
+    depends_on:
+      - config-service
+      - discovery-service
+      - db-shared
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:mysql://db-shared:3306/db
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.MySQL8Dialect
+      APPLICATION_OPEN_API_EMAIL: elyashevich.artem06@gmail.com
+    ports:
+      - "8092:8092"
+  order-service:
+    container_name: order-service
+    build:
+      context: ./services/order
+      dockerfile: Dockerfile
+    depends_on:
+      - config-service
+      - discovery-service
+      - db-shared
+      - kafka
+      - zookeeper
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:mysql://db-shared:3306/db
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.MySQL8Dialect
+      APPLICATION_OPEN_API_EMAIL: elyashevich.artem06@gmail.com
+    ports:
+      - "8094:8094"
+  payment-service:
+    container_name: core-service
+    build:
+      context: ./services/core
+      dockerfile: Dockerfile
+    depends_on:
+      - config-service
+      - discovery-service
+      - kafka
+      - zookeeper
+    ports:
+      - "8095:8095"

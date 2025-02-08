@@ -2,6 +2,7 @@ package com.elyashevich.gateway.filter;
 
 import com.elyashevich.gateway.dto.VerifyRequest;
 import com.elyashevich.gateway.dto.VerifyResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -17,6 +18,7 @@ import reactor.core.publisher.Mono;
 import java.util.Collections;
 import java.util.Objects;
 
+@Slf4j
 @Component
 public class CustomAuthenticationFilter extends AbstractGatewayFilterFactory<CustomAuthenticationFilter.Config> {
 
@@ -46,6 +48,7 @@ public class CustomAuthenticationFilter extends AbstractGatewayFilterFactory<Cus
     public GatewayFilter apply(final Config config) {
         return (exchange, chain) -> {
             if (!RouteValidator.isSecured.test(exchange.getRequest())) {
+                log.info(exchange.getRequest().getURI().toString());
                 return chain.filter(exchange);
             }
             var authorizationHeaders = exchange
