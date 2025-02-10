@@ -8,6 +8,7 @@ spring:
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.dialect.MySQL8Dialect
+
 server:
   port: 8091
 
@@ -15,5 +16,5 @@ application:
   rest:
     orderServiceUri: http://localhost:8094/api/v1/orders
   open-api:
-    email:
+    email: someemail
     server: http://127.0.0.1:8222

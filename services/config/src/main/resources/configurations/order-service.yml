@@ -22,5 +22,5 @@ server:
   port: 8094
 application:
   open-api:
-    email:
+    email: someemail
     server: http://127.0.0.1:8222

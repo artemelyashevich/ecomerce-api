@@ -1,0 +1,215 @@
+databaseChangeLog:
+  - changeSet:
+      id: 5
+      author: elyashevich
+      changes:
+        - insert:
+            tableName: products
+            columns:
+              - column:
+                  name: name
+                  value: "Smartphone"
+              - column:
+                  name: description
+                  value: "Latest model with high-end features"
+              - column:
+                  name: price
+                  value: 699.99
+              - column:
+                  name: category_id
+                  value: 1
+              - column:
+                  name: image
+                  value: "smartphone.jpg"
+              - column:
+                  name: version
+                  value: 1
+        - insert:
+            tableName: products
+            columns:
+              - column:
+                  name: name
+                  value: "Laptop"
+              - column:
+                  name: description
+                  value: "Powerful laptop for work and gaming"
+              - column:
+                  name: price
+                  value: 1299.99
+              - column:
+                  name: category_id
+                  value: 1
+              - column:
+                  name: image
+                  value: "laptop.jpg"
+              - column:
+                  name: version
+                  value: 1
+        - insert:
+            tableName: products
+            columns:
+              - column:
+                  name: name
+                  value: "Running Shoes"
+              - column:
+                  name: description
+                  value: "Comfortable and durable running shoes"
+              - column:
+                  name: price
+                  value: 79.99
+              - column:
+                  name: category_id
+                  value: 4
+              - column:
+                  name: image
+                  value: "running_shoes.jpg"
+              - column:
+                  name: version
+                  value: 1
+        - insert:
+            tableName: products
+            columns:
+              - column:
+                  name: name
+                  value: "Cooking Set"
+              - column:
+                  name: description
+                  value: "Non-stick cookware set for kitchen"
+              - column:
+                  name: price
+                  value: 129.99
+              - column:
+                  name: category_id
+                  value: 3
+              - column:
+                  name: image
+                  value: "cooking_set.jpg"
+              - column:
+                  name: version
+                  value: 1
+        - insert:
+            tableName: products
+            columns:
+              - column:
+                  name: name
+                  value: "Novel Book"
+              - column:
+                  name: description
+                  value: "Bestselling fiction novel"
+              - column:
+                  name: price
+                  value: 19.99
+              - column:
+                  name: category_id
+                  value: 5
+              - column:
+                  name: image
+                  value: "novel.jpg"
+              - column:
+                  name: version
+                  value: 1
+        - insert:
+            tableName: products
+            columns:
+              - column:
+                  name: name
+                  value: "Gaming Console"
+              - column:
+                  name: description
+                  value: "Next-gen gaming experience"
+              - column:
+                  name: price
+                  value: 499.99
+              - column:
+                  name: category_id
+                  value: 1
+              - column:
+                  name: image
+                  value: "gaming_console.jpg"
+              - column:
+                  name: version
+                  value: 1
+        - insert:
+            tableName: products
+            columns:
+              - column:
+                  name: name
+                  value: "Men's T-Shirt"
+              - column:
+                  name: description
+                  value: "Casual cotton t-shirt"
+              - column:
+                  name: price
+                  value: 19.99
+              - column:
+                  name: category_id
+                  value: 2
+              - column:
+                  name: image
+                  value: "tshirt.jpg"
+              - column:
+                  name: version
+                  value: 1
+        - insert:
+            tableName: products
+            columns:
+              - column:
+                  name: name
+                  value: "Car Tire"
+              - column:
+                  name: description
+                  value: "Durable and high-performance tire"
+              - column:
+                  name: price
+                  value: 149.99
+              - column:
+                  name: category_id
+                  value: 8
+              - column:
+                  name: image
+                  value: "car_tire.jpg"
+              - column:
+                  name: version
+                  value: 1
+        - insert:
+            tableName: products
+            columns:
+              - column:
+                  name: name
+                  value: "Face Cream"
+              - column:
+                  name: description
+                  value: "Moisturizing face cream"
+              - column:
+                  name: price
+                  value: 29.99
+              - column:
+                  name: category_id
+                  value: 7
+              - column:
+                  name: image
+                  value: "face_cream.jpg"
+              - column:
+                  name: version
+                  value: 1
+        - insert:
+            tableName: products
+            columns:
+              - column:
+                  name: name
+                  value: "Organic Honey"
+              - column:
+                  name: description
+                  value: "100% pure organic honey"
+              - column:
+                  name: price
+                  value: 14.99
+              - column:
+                  name: category_id
+                  value: 10
+              - column:
+                  name: image
+                  value: "organic_honey.jpg"
+              - column:
+                  name: version
+                  value: 1

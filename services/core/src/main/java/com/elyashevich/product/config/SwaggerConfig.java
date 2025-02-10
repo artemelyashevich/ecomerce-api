@@ -17,10 +17,10 @@ public class SwaggerConfig {
     private static final String CORE_SERVICE_DESCRIPTION = "API documentation for the Core Service";
     private static final String CORE_SERVICE_VERSION = "1.0";
 
-    @Value("${application.open-api.email}")
+    @Value("${application.open-api.email:example}")
     private String email;
 
-    @Value("${application.open-api.server}")
+    @Value("${application.open-api.server:http://localhost:8222}")
     private String serverUrl;
 
     @Bean
