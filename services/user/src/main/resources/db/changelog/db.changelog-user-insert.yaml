@@ -1,0 +1,125 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: elyashevich
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: username
+                  value: "user1"
+              - column:
+                  name: email
+                  value: "user1@example.com"
+              - column:
+                  name: password
+                  value: "password1"
+              - column:
+                  name: full_name
+                  value: "User One"
+              - column:
+                  name: address
+                  value: "123 Main St"
+              - column:
+                  name: image
+                  value: "user1.jpg"
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: 2
+              - column:
+                  name: username
+                  value: "user2"
+              - column:
+                  name: email
+                  value: "user2@example.com"
+              - column:
+                  name: password
+                  value: "password2"
+              - column:
+                  name: full_name
+                  value: "User Two"
+              - column:
+                  name: address
+                  value: "456 Elm St"
+              - column:
+                  name: image
+                  value: "user2.jpg"
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: 3
+              - column:
+                  name: username
+                  value: "user3"
+              - column:
+                  name: email
+                  value: "user3@example.com"
+              - column:
+                  name: password
+                  value: "password3"
+              - column:
+                  name: full_name
+                  value: "User Three"
+              - column:
+                  name: address
+                  value: "789 Oak St"
+              - column:
+                  name: image
+                  value: "user3.jpg"
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: 4
+              - column:
+                  name: username
+                  value: "user4"
+              - column:
+                  name: email
+                  value: "user4@example.com"
+              - column:
+                  name: password
+                  value: "password4"
+              - column:
+                  name: full_name
+                  value: "User Four"
+              - column:
+                  name: address
+                  value: "101 Pine St"
+              - column:
+                  name: image
+                  value: "user4.jpg"
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: 5
+              - column:
+                  name: username
+                  value: "user5"
+              - column:
+                  name: email
+                  value: "user5@example.com"
+              - column:
+                  name: password
+                  value: "password5"
+              - column:
+                  name: full_name
+                  value: "User Five"
+              - column:
+                  name: address
+                  value: "202 Maple St"
+              - column:
+                  name: image
+                  value: "user5.jpg"
