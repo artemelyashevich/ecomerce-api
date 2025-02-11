@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: elyashevich
+      changes:
+        - addNotNullConstraint:
+            tableName: orders
+            columnName: user_id
+            columnDataType: bigint
+        - addNotNullConstraint:
+            tableName: orders
+            columnName: amount
+            columnDataType: decimal
