@@ -1,5 +1,11 @@
 version: "3.9"
 services:
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017"
   db-shared:
     container_name: db
     image: mysql:latest
@@ -149,3 +155,16 @@ services:
       - zookeeper
     ports:
       - "8095:8095"
+  image-service:
+    container_name: image-service
+    build:
+      context: ./services/image
+      dockerfile: Dockerfile
+    depends_on:
+      - mongodb
+      - config-service
+      - registry-service
+      - kafka
+      - zookeeper
+    ports:
+      - "8099:8099"
