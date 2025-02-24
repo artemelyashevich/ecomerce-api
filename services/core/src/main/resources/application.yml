@@ -6,3 +6,9 @@ spring:
     change-log: classpath:db/changelog/master.yaml
   config:
     import: optional:configserver:http://localhost:8888
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    enabled: true
+    path: /v3/api-docs

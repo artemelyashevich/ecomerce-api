@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
@@ -56,9 +57,11 @@ public class ProductController {
     })
     public ResponseEntity<ProductDto> create(
             final @Valid @RequestBody ProductDto productDto,
-            final UriComponentsBuilder uriComponentsBuilder) {
+            final @RequestParam("file") MultipartFile file,
+            final UriComponentsBuilder uriComponentsBuilder
+    ) {
         var candidate = this.productMapper.toEntity(productDto);
-        var product = this.productService.create(candidate);
+        var product = this.productService.create(candidate, file);
         return ResponseEntity
                 .created(
                         uriComponentsBuilder

@@ -53,13 +53,6 @@ public class CategoryServiceImpl implements CategoryService {
     public Category create(final Category category) {
         log.debug("Attempting to create category: {}", category);
 
-        /*if (this.categoryRepository.existsByName(category.getName())) {
-            var message = CATEGORY_WITH_NAME_ALREADY_EXISTS_TEMPLATE.formatted(category.getName());
-
-            log.warn(message);
-
-            throw new ResourceAlreadyExistsException(message);
-        }*/
         var newCategory = this.categoryRepository.save(category);
 
         log.info("Created category with id {}", newCategory.getId());

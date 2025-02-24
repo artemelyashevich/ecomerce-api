@@ -1,15 +1,20 @@
 package com.elyashevich.product.service.impl;
 
+import com.elyashevich.product.api.client.ImageRestClient;
+import com.elyashevich.product.config.WebSocketConfig;
 import com.elyashevich.product.domain.entity.Category;
 import com.elyashevich.product.domain.entity.Product;
 import com.elyashevich.product.exception.ResourceNotFoundException;
 import com.elyashevich.product.repository.ProductRepository;
 import com.elyashevich.product.service.CategoryService;
 import com.elyashevich.product.service.ProductService;
+import com.elyashevich.product.util.WebSocketConstant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,6 +27,7 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryService categoryService;
+    private final ImageRestClient imageRestClient;
 
     @Override
     public List<Product> findAll() {
@@ -52,9 +58,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public Product create(final Product product) {
+    public Product create(final Product product, final MultipartFile image) {
         log.debug("Attempting to create product: {}", product);
-
+        var id = this.imageRestClient.uploadFile(image);
         Category category = null;
         if (product.getCategory().getId() != null) {
             category = this.categoryService.findById(product.getCategory().getId());
@@ -62,6 +68,7 @@ public class ProductServiceImpl implements ProductService {
             category = this.categoryService.findByName(product.getCategory().getName());
         }
         product.setCategory(category);
+        product.setImage(id);
         var newProduct = this.productRepository.save(product);
 
         log.info("Created product with id {}", newProduct.getId());

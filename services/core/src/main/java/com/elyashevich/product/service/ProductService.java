@@ -1,6 +1,7 @@
 package com.elyashevich.product.service;
 
 import com.elyashevich.product.domain.entity.Product;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -28,9 +29,10 @@ public interface ProductService {
      * Creates a new product.
      *
      * @param product the product to create
+     * @param image
      * @return the created product
      */
-    Product create(final Product product);
+    Product create(final Product product, final MultipartFile image);
 
     /**
      * Updates an existing product.
