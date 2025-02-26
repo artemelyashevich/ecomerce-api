@@ -2,9 +2,9 @@ package com.elyashevich.auth.api.controller;
 
 import com.elyashevich.auth.api.dto.LoginDto;
 import com.elyashevich.auth.api.dto.RegisterDto;
-import com.elyashevich.auth.api.dto.TokenResponse;
 import com.elyashevich.auth.api.dto.VerifyTokenRequest;
 import com.elyashevich.auth.api.dto.VerifyTokenResponse;
+import com.elyashevich.auth.api.dto.JwtResponse;
 import com.elyashevich.auth.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,11 +34,11 @@ public final class AuthController {
             @ApiResponse(responseCode = "400", description = "Invalid input"),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
-    public ResponseEntity<TokenResponse> login(final @Valid @RequestBody LoginDto loginEntity) {
-        var tokenResponse = this.authService.login(loginEntity);
+    public ResponseEntity<JwtResponse> login(final @Valid @RequestBody LoginDto loginEntity) {
+        var jwtResponse = this.authService.login(loginEntity);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new TokenResponse(tokenResponse));
+                .body(jwtResponse);
     }
 
     @PostMapping("/register")
@@ -48,11 +48,11 @@ public final class AuthController {
             @ApiResponse(responseCode = "400", description = "Invalid input"),
             @ApiResponse(responseCode = "409", description = "User already exists")
     })
-    public ResponseEntity<TokenResponse> register(final @Valid @RequestBody RegisterDto registerEntity) {
+    public ResponseEntity<JwtResponse> register(final @Valid @RequestBody RegisterDto registerEntity) {
         var tokenResponse = this.authService.register(registerEntity);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new TokenResponse(tokenResponse));
+                .body(tokenResponse);
     }
 
     @PostMapping("/verify")

@@ -13,11 +13,12 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import static com.elyashevich.auth.util.TokenConstantUtil.*;
+
 @Component
 public class TokenFilter extends OncePerRequestFilter {
 
     private static final int BEGIN_INDEX = 7;
-    private static final String BEARER_TOKEN_PREFIX = "Bearer ";
 
     @Override
     protected void doFilterInternal(
@@ -25,10 +26,10 @@ public class TokenFilter extends OncePerRequestFilter {
             @NonNull final HttpServletResponse response,
             @NonNull final FilterChain filterChain
     ) throws ServletException, IOException {
-        var header = request.getHeader("Authorization");
+        var header = request.getHeader(HEADER_STRING);
         String jwt = null;
         String email = null;
-        if (header != null && header.startsWith(BEARER_TOKEN_PREFIX)) {
+        if (header != null && header.startsWith(TOKEN_PREFIX)) {
             jwt = header.substring(BEGIN_INDEX);
             email = TokenUtil.extractEmailClaims(jwt);
         }

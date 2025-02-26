@@ -28,6 +28,8 @@ public record ProductDto(
         double price,
 
         @NotNull(message = "Category must be not null")
-        CategoryDto category
+        CategoryDto category,
+
+        String image
 ) {
 }

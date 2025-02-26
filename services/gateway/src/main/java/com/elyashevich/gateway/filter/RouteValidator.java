@@ -10,8 +10,9 @@ import java.util.function.Predicate;
 public class RouteValidator {
 
     private static final List<String> ENDPOINTS = List.of(
-            "api/v1/auth/register",
-            "api/v1/auth/login",
+            "/api/v1/auth/register",
+            "/api/v1/auth/login",
+            "/api/v1/users",
             "api/v1/eureka/**",
             "/v3/api-docs/users",
             "/v3/api-docs/products",

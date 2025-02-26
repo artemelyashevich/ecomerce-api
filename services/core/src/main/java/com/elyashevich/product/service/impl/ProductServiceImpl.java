@@ -1,17 +1,14 @@
 package com.elyashevich.product.service.impl;
 
 import com.elyashevich.product.api.client.ImageRestClient;
-import com.elyashevich.product.config.WebSocketConfig;
 import com.elyashevich.product.domain.entity.Category;
 import com.elyashevich.product.domain.entity.Product;
 import com.elyashevich.product.exception.ResourceNotFoundException;
 import com.elyashevich.product.repository.ProductRepository;
 import com.elyashevich.product.service.CategoryService;
 import com.elyashevich.product.service.ProductService;
-import com.elyashevich.product.util.WebSocketConstant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -56,11 +53,11 @@ public class ProductServiceImpl implements ProductService {
         return product;
     }
 
+    // FIXME
     @Transactional
     @Override
-    public Product create(final Product product, final MultipartFile image) {
+    public Product create(final Product product) {
         log.debug("Attempting to create product: {}", product);
-        var id = this.imageRestClient.uploadFile(image);
         Category category = null;
         if (product.getCategory().getId() != null) {
             category = this.categoryService.findById(product.getCategory().getId());
@@ -68,7 +65,6 @@ public class ProductServiceImpl implements ProductService {
             category = this.categoryService.findByName(product.getCategory().getName());
         }
         product.setCategory(category);
-        product.setImage(id);
         var newProduct = this.productRepository.save(product);
 
         log.info("Created product with id {}", newProduct.getId());
@@ -108,5 +104,13 @@ public class ProductServiceImpl implements ProductService {
         this.productRepository.delete(product);
 
         log.info("Deleted product with id {}", id);
+    }
+
+    @Override
+    public void uploadImage(final Long id, final MultipartFile file) {
+        var product = this.findById(id);
+        var imageId = this.imageRestClient.uploadFile(file);
+        product.setImage(imageId);
+        this.productRepository.save(product);
     }
 }

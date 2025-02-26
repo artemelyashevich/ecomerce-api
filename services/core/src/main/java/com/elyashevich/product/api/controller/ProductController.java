@@ -57,11 +57,10 @@ public class ProductController {
     })
     public ResponseEntity<ProductDto> create(
             final @Valid @RequestBody ProductDto productDto,
-            final @RequestParam("file") MultipartFile file,
             final UriComponentsBuilder uriComponentsBuilder
     ) {
         var candidate = this.productMapper.toEntity(productDto);
-        var product = this.productService.create(candidate, file);
+        var product = this.productService.create(candidate);
         return ResponseEntity
                 .created(
                         uriComponentsBuilder
@@ -69,6 +68,15 @@ public class ProductController {
                                 .build(Map.of("productId", product.getId()))
                 )
                 .body(this.productMapper.toDto(product));
+    }
+
+    @PostMapping("/{productId}")
+    public ResponseEntity<Void> uploadImage(
+            final @PathVariable("productId") Long id,
+            final @RequestParam("file") MultipartFile file
+    ) {
+        this.productService.uploadImage(id, file);
+        return ResponseEntity.accepted().build();
     }
 
     @PutMapping("/{id}")

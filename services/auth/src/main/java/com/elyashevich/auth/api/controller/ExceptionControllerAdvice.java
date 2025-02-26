@@ -41,6 +41,7 @@ public class ExceptionControllerAdvice {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionBody> handleException(final Exception exception) {
+        exception.printStackTrace();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(this.handleException(exception, UNEXPECTED_ERROR_MESSAGE));
     }
 

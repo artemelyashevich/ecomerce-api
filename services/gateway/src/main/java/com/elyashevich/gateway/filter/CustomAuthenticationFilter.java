@@ -74,7 +74,7 @@ public class CustomAuthenticationFilter extends AbstractGatewayFilterFactory<Cus
     ) {
         try {
             webClient.post()
-                    .uri(basicUri)
+                    .uri("http://localhost:8093/api/v1/auth")
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(new VerifyRequest(token))
                     .retrieve()

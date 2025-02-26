@@ -11,8 +11,10 @@ import com.mongodb.client.gridfs.GridFSFindIterable;
 import com.mongodb.client.gridfs.model.GridFSFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.gridfs.GridFsResource;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,8 +42,8 @@ public class ImageServiceImpl implements ImageService {
 
     @Transactional
     @Override
-    public List<GridFSFile> findAllByUserId(final String userId) {
-        var imageMetadata = imageMetadataRepository.findByUserId(userId);
+    public List<GridFSFile> findByOwnerId(final String userId) {
+        var imageMetadata = imageMetadataRepository.findByOwnerId(userId);
         var data = new ArrayList<GridFSFile>();
         imageMetadata.forEach(image -> {
             data.add(this.gridFsTemplate.findOne(Query.query(Criteria.where("_id").is(image.getId()))));
@@ -50,16 +52,24 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public GridFSFile findById(final String id) {
-        return gridFsTemplate.findOne(Query.query(Criteria.where("_id").is(id)));
+    public byte[] findById(final String id) {
+        var gridFsFile = gridFsTemplate.findOne(Query.query(Criteria.where("_id").is(id)));
+        byte[] bytes = null;
+        GridFsResource resource = gridFsTemplate.getResource(gridFsFile);
+        try (var inputStream = resource.getInputStream()) {
+            bytes = inputStream.readAllBytes();
+        } catch (IOException e) {
+            throw new UploadingException(e);
+        }
+        return bytes;
     }
 
     @Transactional
     @Override
     public ImageMetadata create(final MultipartFile file, final String userId) {
         try {
-            notificationProducer.sendOrderEvent(NotificationEvent.builder()
-                            .eventType(EventType.PENDING)
+            this.notificationProducer.sendOrderEvent(NotificationEvent.builder()
+                    .eventType(EventType.PENDING)
                     .build());
 
             var id = gridFsTemplate.store(file.getInputStream(), file.getOriginalFilename(), file.getContentType());
@@ -67,13 +77,13 @@ public class ImageServiceImpl implements ImageService {
                     .id(id.toString())
                     .filename(file.getOriginalFilename())
                     .contentType(file.getContentType())
-                    .userId(userId)
+                    .ownerId(userId)
                     .uploadDate(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME))
                     .build();
 
             var result = this.imageMetadataRepository.save(image);
 
-            notificationProducer.sendOrderEvent(NotificationEvent.builder()
+            this.notificationProducer.sendOrderEvent(NotificationEvent.builder()
                     .eventType(EventType.FULFILLED)
                     .build());
 
@@ -84,5 +94,17 @@ public class ImageServiceImpl implements ImageService {
                     .build());
             throw new UploadingException("Error uploading file", e);
         }
+    }
+
+    @Override
+    public String upload(final MultipartFile file) {
+        String id = null;
+        try {
+            var imageId = gridFsTemplate.store(file.getInputStream(), file.getOriginalFilename(), file.getContentType());
+            id = imageId.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return id;
     }
 }

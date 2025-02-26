@@ -1,9 +1,13 @@
 package com.elyashevich.image.api.controller;
 
+import com.elyashevich.image.api.dto.ResponseDto;
 import com.elyashevich.image.domain.entity.ImageMetadata;
 import com.elyashevich.image.service.ImageService;
 import com.mongodb.client.gridfs.model.GridFSFile;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,15 +36,18 @@ public class ImageController {
         return ResponseEntity.ok(images);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<GridFSFile> findById(@PathVariable("id") String id) {
+    @GetMapping(value = "/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<byte[]> findById(final @PathVariable("id") String id) {
         var image = this.imageService.findById(id);
-        return ResponseEntity.ok(image);
+        var headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG);
+        headers.setContentLength(image.length);
+        return new ResponseEntity<>(image, headers, HttpStatus.OK);
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<GridFSFile>> findAllByUserId(@PathVariable("userId") String userId) {
-        var data = this.imageService.findAllByUserId(userId);
+    @GetMapping("/owner/{ownerId}")
+    public ResponseEntity<List<GridFSFile>> findAllByOwnerId(final @PathVariable("ownerId") String userId) {
+        var data = this.imageService.findByOwnerId(userId);
         return ResponseEntity.ok(data);
     }
 
@@ -57,5 +64,19 @@ public class ImageController {
                                 .build(metadata.getId())
                 )
                 .body(metadata);
+    }
+
+    @PostMapping
+    public ResponseEntity<ResponseDto> save(
+            final @RequestParam("file") MultipartFile file,
+            final UriComponentsBuilder uriComponentsBuilder
+
+    ) {
+        var id = this.imageService.upload(file);
+        return ResponseEntity.created(
+                uriComponentsBuilder.path("/api/v1/images/{id}")
+                        .build(id)
+        )
+                .body(new ResponseDto(id));
     }
 }

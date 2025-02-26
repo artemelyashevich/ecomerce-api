@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface ImageMetadataRepository extends MongoRepository<ImageMetadata, String> {
 
-    List<ImageMetadata> findByUserId(final String userId);
+    List<ImageMetadata> findByOwnerId(final String ownerId);
 }

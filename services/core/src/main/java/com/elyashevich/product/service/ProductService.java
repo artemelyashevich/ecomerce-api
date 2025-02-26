@@ -29,10 +29,9 @@ public interface ProductService {
      * Creates a new product.
      *
      * @param product the product to create
-     * @param image
      * @return the created product
      */
-    Product create(final Product product, final MultipartFile image);
+    Product create(final Product product);
 
     /**
      * Updates an existing product.
@@ -49,4 +48,6 @@ public interface ProductService {
      * @param id the ID of the product to delete
      */
     void delete(final Long id);
+
+    void uploadImage(final Long id, final MultipartFile file);
 }

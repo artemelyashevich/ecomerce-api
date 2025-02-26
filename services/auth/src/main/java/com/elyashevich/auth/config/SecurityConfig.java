@@ -34,6 +34,8 @@ public class SecurityConfig {
                                         "/v3/api-docs/**",
                                         "/swagger-ui/*"
                                 ).permitAll()
+                                .requestMatchers("/api/v1/auth/register").permitAll()
+                                .requestMatchers("/api/v1/auth/login").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement ->

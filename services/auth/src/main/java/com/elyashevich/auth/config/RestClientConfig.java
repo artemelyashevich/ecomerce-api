@@ -17,7 +17,7 @@ public class RestClientConfig {
     UserRestClient userRestClient() {
         return new UserRestClientImpl(
                 RestClient.builder()
-                        .baseUrl(baseUri)
+                        .baseUrl("http://localhost:8092/api/v1/users")
                         .build()
         );
     }

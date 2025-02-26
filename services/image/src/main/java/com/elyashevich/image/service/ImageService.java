@@ -11,9 +11,11 @@ public interface ImageService {
 
     GridFSFindIterable findAll();
 
-    List<GridFSFile> findAllByUserId(final String userId);
+    List<GridFSFile> findByOwnerId(final String userId);
 
-    GridFSFile findById(final String id);
+    byte[] findById(final String id);
 
     ImageMetadata create(final MultipartFile file, final String userId);
+
+    String upload(final MultipartFile file);
 }

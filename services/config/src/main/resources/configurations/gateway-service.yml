@@ -32,6 +32,12 @@ spring:
           uri: lb:http://auth-service
           predicates:
             - Path=/api/v1/auth/**
+        - id: image-service
+          uri: lb:http://image-service
+          predicates:
+              - Path=/api/v1/images/**
+          filters:
+            - CustomAuthenticationFilter
       cors-configurations:
         '[/**]':
           allowedOrigins: "*"

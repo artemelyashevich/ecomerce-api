@@ -31,7 +31,7 @@ public class RestClientConfig {
     public ImageRestClient imageRestClient(){
         return new ImageRestClientImpl(
                 RestClient.builder()
-                        .baseUrl(this.baseImageUri)
+                        .baseUrl("http://localhost:8099/api/v1/images")
                         .build()
         );
     }

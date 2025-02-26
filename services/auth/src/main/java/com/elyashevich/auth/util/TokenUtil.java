@@ -50,10 +50,9 @@ public class TokenUtil {
      * @param userDetails The UserDetails object to generate the token for.
      * @return The generated token.
      */
-    public static String generateToken(final UserDetails userDetails) {
-        return getToken(userDetails);
+    public static String generateToken(final UserDetails userDetails, final long tokenLifeTime) {
+        return createToken(userDetails, tokenLifeTime);
     }
-
     /**
      * Parse and retrieve claims from the provided token.
      *
@@ -80,24 +79,26 @@ public class TokenUtil {
      * @param userDetails The UserDetails object for which to generate the token.
      * @return The generated JWT token.
      */
-    private static String getToken(final UserDetails userDetails) {
-        Date issuedAt = new Date();
+    private static String createToken(final UserDetails userDetails, final Long tokenLifeTime) {
+        var issuedAt = new Date();
+        var expirationDate = new Date(issuedAt.getTime() + tokenLifeTime);
+
         return Jwts.builder()
                 .setClaims(
                         Map.of(
                                 "roles",
-                                userDetails.getAuthorities()
-                                        .stream()
+                                userDetails.getAuthorities().stream()
                                         .map(GrantedAuthority::getAuthority)
                                         .toList()
                         )
                 )
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(issuedAt)
-                .setExpiration(new Date(issuedAt.getTime() + lifetime))
+                .setExpiration(expirationDate)
                 .signWith(Keys.hmacShaKeyFor(secret.getBytes()), SignatureAlgorithm.HS256)
                 .compact();
     }
+
 
     public static String validate(final String token) {
         if (getClaimsFromToken(token).getSubject().isEmpty()) {
