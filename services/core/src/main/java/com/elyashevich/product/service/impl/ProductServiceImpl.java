@@ -9,6 +9,10 @@ import com.elyashevich.product.service.CategoryService;
 import com.elyashevich.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +31,7 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryService categoryService;
     private final ImageRestClient imageRestClient;
 
+    @Cacheable(value="ProductService::findAll")
     @Override
     public List<Product> findAll(final Integer page, final Integer size) {
         log.debug("Attempting to find all products, page: {}, size: {}", page, size);
@@ -40,6 +45,7 @@ public class ProductServiceImpl implements ProductService {
         return productPage.getContent();
     }
 
+    @Cacheable(value="ProductService::findById", key = "#id")
     @Override
     public Product findById(final Long id) {
         log.debug("Attempting to find product by id: {}", id);
@@ -58,6 +64,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     // FIXME
+
+    @Caching(
+            put = {
+                    @CachePut(value = "ProductService::findById", key="#result.id"),
+                    @CachePut(value = "ProductService::findAll")
+            }
+    )
     @Transactional
     @Override
     public Product create(final Product product) {
@@ -75,6 +88,12 @@ public class ProductServiceImpl implements ProductService {
         return newProduct;
     }
 
+    @Caching(
+            put = {
+                    @CachePut(value = "ProductService::findById", key="#result.id"),
+                    @CachePut(value = "ProductService::findAll")
+            }
+    )
     @Transactional
     @Override
     public Product update(final Long id, final Product product) {
@@ -99,6 +118,7 @@ public class ProductServiceImpl implements ProductService {
         return newProduct;
     }
 
+    @CacheEvict(value = "ProductService::findById", key="#id")
     @Transactional
     @Override
     public void delete(final Long id) {
@@ -110,6 +130,12 @@ public class ProductServiceImpl implements ProductService {
         log.info("Deleted product with id {}", id);
     }
 
+    @Caching(
+            put = {
+                    @CachePut(value = "ProductService::findById", key="#result.id"),
+                    @CachePut(value = "ProductService::findAll")
+            }
+    )
     @Override
     public void uploadImage(final Long id, final MultipartFile file) {
         log.debug("Attempting to add file");
