@@ -1,4 +1,7 @@
 spring:
+  cloud:
+    openfeign:
+      enabled: true
   data:
     redis:
       port: 6379
@@ -6,9 +9,18 @@ spring:
 server:
   port:
     8093
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: false
+    hostname: localhost
+
 application:
   userService:
-    baseUri: http://localhost:8222/api/v1/users
+    baseUri: http://user-service/api/v1/users
   open-api:
     server: http://127.0.0.1:8222
     email: someemail

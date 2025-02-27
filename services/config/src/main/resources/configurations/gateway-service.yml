@@ -1,39 +1,37 @@
 server:
   port: 8222
 spring:
+  security:
+    enabled: false
   cloud:
     gateway:
       discovery:
         locator:
-          enabled: true
           lower-case-service-id: true
+          enabled: true
       routes:
         - id: core-service
-          uri: lb:http://core-service
+          uri: lb://core-service
           predicates:
-            - Path=/api/v1/products/**
-            - Path=/api/v1/carts/**
-            - Path=/api/v1/categories/**
-          filters:
-            - CustomAuthenticationFilter
+            - Path=/api/v1/products/**, /api/v1/carts/**, /api/v1/categories/**
         - id: user-service
-          uri: lb:http://user-service
+          uri: lb://user-service
           predicates:
             - Path=/api/v1/users/**
           filters:
             - CustomAuthenticationFilter
         - id: order-service
-          uri: lb:http://order-service
+          uri: lb://order-service
           predicates:
             - Path=/api/v1/orders/**
           filters:
             - CustomAuthenticationFilter
         - id: auth-service
-          uri: lb:http://auth-service
+          uri: lb://auth-service
           predicates:
             - Path=/api/v1/auth/**
         - id: image-service
-          uri: lb:http://image-service
+          uri: lb://image-service
           predicates:
               - Path=/api/v1/images/**
           filters:
@@ -52,12 +50,15 @@ spring:
       default-filters:
         - name: Retry
           args:
-            retries: 3
+#            retries: 3
             methods: GET,POST,PUT,DELETE,OPTIONS
 
 eureka:
   instance:
     hostname: localhost
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
 
 application:
   security:
@@ -66,3 +67,15 @@ application:
       - api/v1/auth/login
       - api/v1/auth/register
       - api/v1/auth/verify
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty: DEBUG

@@ -33,7 +33,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public JwtResponse login(final LoginDto loginEntity) {
-        var candidate = this.userRestClient.findUserByEmail(loginEntity.getEmail());
+        var candidate = this.userRestClient.findByEmail(loginEntity.getEmail());
 
         if (!this.passwordEncoder.matches(loginEntity.getPassword(), candidate.getPassword())) {
             throw new PasswordMismatchException("Password does not match");
@@ -45,7 +45,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public JwtResponse register(final RegisterDto registerEntity) {
         registerEntity.setPassword(this.passwordEncoder.encode(registerEntity.getPassword()));
-        var candidate = this.userRestClient.saveUser(registerEntity);
+        var candidate = this.userRestClient.save(registerEntity);
 
         return this.authenticate(convertToUserDetails(candidate));
     }
@@ -53,7 +53,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public JwtResponse refresh(final String token) {
         var email = TokenUtil.extractEmailClaims(token);
-        var user = this.userRestClient.findUserByEmail(email);
+        var user = this.userRestClient.findByEmail(email);
         return new JwtResponse(TokenUtil.generateToken(convertToUserDetails(user), ACCESS_TOKEN_EXPIRES_TIME), token);
     }
 

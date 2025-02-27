@@ -26,12 +26,6 @@ public class CustomAuthenticationFilter extends AbstractGatewayFilterFactory<Cus
 
     private static final String MISSING_JWT_TOKEN = "Invalid or missing JWT token";
 
-    @Value("${application.security.authenticationServiceUri:http://localhost:8093/api/v1/auth}")
-    private String authenticationServiceUri;
-
-    @Value("${application.security.authenticationServiceUri}")
-    private String basicUri;
-
     private final WebClient webClient;
 
     public static class Config {
@@ -74,7 +68,7 @@ public class CustomAuthenticationFilter extends AbstractGatewayFilterFactory<Cus
     ) {
         try {
             webClient.post()
-                    .uri("http://localhost:8093/api/v1/auth")
+                    .uri("http://auth-service/api/v1/auth")
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(new VerifyRequest(token))
                     .retrieve()

@@ -18,7 +18,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
-        var user = this.userRestClient.findUserByEmail(email);
+        var user = this.userRestClient.findByEmail(email);
 
         return new User(
                 user.getEmail(),
