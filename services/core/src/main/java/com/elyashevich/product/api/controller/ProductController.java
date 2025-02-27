@@ -32,8 +32,11 @@ public class ProductController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved list of products"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    public ResponseEntity<List<ProductDto>> findAll() {
-        var products = this.productService.findAll();
+    public ResponseEntity<List<ProductDto>> findAll(
+            final @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+            final @RequestParam(value = "size", required = false, defaultValue = "5") Integer size
+    ) {
+        var products = this.productService.findAll(page, size);
         return ResponseEntity.ok(this.productMapper.toDto(products));
     }
 

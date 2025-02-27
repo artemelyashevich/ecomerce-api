@@ -9,6 +9,7 @@ import com.elyashevich.product.service.CategoryService;
 import com.elyashevich.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,13 +28,16 @@ public class ProductServiceImpl implements ProductService {
     private final ImageRestClient imageRestClient;
 
     @Override
-    public List<Product> findAll() {
-        log.debug("Attempting to find all products");
+    public List<Product> findAll(final Integer page, final Integer size) {
+        log.debug("Attempting to find all products, page: {}, size: {}", page, size);
 
-        var products = this.productRepository.findAll();
+        var pageable = PageRequest.of(page, size);
 
-        log.info("Found {} products", products.size());
-        return products;
+        var productPage = this.productRepository.findAll(pageable);
+
+        log.info("Found {} products on page {} with size {}", productPage.getTotalElements(), page, size);
+
+        return productPage.getContent();
     }
 
     @Override
@@ -108,9 +112,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void uploadImage(final Long id, final MultipartFile file) {
+        log.debug("Attempting to add file");
+
         var product = this.findById(id);
-        var imageId = this.imageRestClient.uploadFile(file);
+        var imageId = this.imageRestClient.upload(file).id();
         product.setImage(imageId);
         this.productRepository.save(product);
+
+        log.info("File has been added");
     }
 }

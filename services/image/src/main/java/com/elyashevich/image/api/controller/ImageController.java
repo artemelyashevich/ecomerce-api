@@ -52,7 +52,7 @@ public class ImageController {
     }
 
     @PostMapping("/{userId}")
-    public ResponseEntity<ImageMetadata> create(
+    public ResponseEntity<String> create(
             final @PathVariable("userId") String userId,
             final @RequestParam("file") MultipartFile file,
             final UriComponentsBuilder uriComponentsBuilder
@@ -63,7 +63,7 @@ public class ImageController {
                         uriComponentsBuilder.path("/api/v1/images/{id}")
                                 .build(metadata.getId())
                 )
-                .body(metadata);
+                .body(metadata.getId());
     }
 
     @PostMapping

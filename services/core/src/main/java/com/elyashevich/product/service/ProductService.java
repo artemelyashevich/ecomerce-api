@@ -15,7 +15,7 @@ public interface ProductService {
      *
      * @return a list of all products
      */
-    List<Product> findAll();
+    List<Product> findAll(final Integer page, final Integer size);
 
     /**
      * Retrieves a product by its ID.
