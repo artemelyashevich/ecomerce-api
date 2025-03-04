@@ -1,20 +1,15 @@
 server:
   port: 8222
 spring:
-  security:
-    enabled: false
   cloud:
     gateway:
       globalcors:
+        enabled: true
         cors-configurations:
           '[/**]':
-            allowedOrigins: "http://localhost:4200"
-            allowedMethods:
-              - GET
-              - POST
-              - OPTIONS
-              - PUT
-              - DELETE
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
       discovery:
         locator:
           lower-case-service-id: true

@@ -66,17 +66,23 @@ public class CustomAuthenticationFilter extends AbstractGatewayFilterFactory<Cus
             final GatewayFilterChain chain,
             final String token
     ) {
-        try {
-            webClient.post()
-                    .uri("http://auth-service/api/v1/auth")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValue(new VerifyRequest(token))
-                    .retrieve()
-                    .bodyToMono(VerifyResponse.class);
-            return chain.filter(exchange);
-        } catch (Exception e) {
-            return this.handleInvalidAccess(exchange, MISSING_JWT_TOKEN);
-        }
+        return webClient.post()
+                .uri("http://auth-service/api/v1/auth/verify")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new VerifyRequest(token))
+                .retrieve()
+                .bodyToMono(VerifyResponse.class)
+                .flatMap(response -> {
+                    if (response == null || response.getEmail() == null) {
+                        return handleInvalidAccess(exchange, "Invalid token response");
+                    }
+                    var mutatedRequest = exchange.getRequest().mutate()
+                            .header("X-User-Email", response.getEmail())
+                            .build();
+                    var mutatedExchange = exchange.mutate().request(mutatedRequest).build();
+                    return chain.filter(mutatedExchange);
+                })
+                .onErrorResume(e -> handleInvalidAccess(exchange, "Token validation failed"));
     }
 
     private Mono<Void> handleInvalidAccess(final ServerWebExchange exchange, final String errorMessage) {

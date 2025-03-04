@@ -1,16 +1,11 @@
 package com.elyashevich.product.service.impl;
 
 import com.elyashevich.product.domain.entity.Category;
-import com.elyashevich.product.exception.ResourceAlreadyExistsException;
 import com.elyashevich.product.exception.ResourceNotFoundException;
 import com.elyashevich.product.repository.CategoryRepository;
 import com.elyashevich.product.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +21,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    @Cacheable(value="CategoryService::findAll")
     @Override
     public List<Category> findAll() {
         log.debug("Attempting to find all categories");
@@ -37,7 +31,6 @@ public class CategoryServiceImpl implements CategoryService {
         return categories;
     }
 
-    @Cacheable(value="CategoryService::findById", key = "#id")
     @Override
     public Category findById(final Long id) {
         log.debug("Attempting to find category by id: {}", id);
@@ -54,13 +47,6 @@ public class CategoryServiceImpl implements CategoryService {
         return category;
     }
 
-    @Caching(
-            put = {
-                    @CachePut(value = "CategoryService::findById", key="#result.id"),
-                    @CachePut(value = "CategoryService::findByName", key="#result.name"),
-                    @CachePut(value = "CategoryService::findAll")
-            }
-    )
     @Override
     public Category create(final Category category) {
         log.debug("Attempting to create category: {}", category);
@@ -71,13 +57,6 @@ public class CategoryServiceImpl implements CategoryService {
         return newCategory;
     }
 
-    @Caching(
-            put = {
-                    @CachePut(value = "CategoryService::findById", key="#id"),
-                    @CachePut(value = "CategoryService::findByName", key="#category.name"),
-                    @CachePut(value = "CategoryService::findAll")
-            }
-    )
     @Transactional
     @Override
     public Category update(final Long id, final Category category) {
@@ -92,7 +71,6 @@ public class CategoryServiceImpl implements CategoryService {
         return newCategory;
     }
 
-    @CacheEvict(value = "ProductService::findById", key = "#id")
     @Transactional
     @Override
     public void delete(final Long id) {
@@ -104,7 +82,6 @@ public class CategoryServiceImpl implements CategoryService {
         log.info("Deleted category with id {}", id);
     }
 
-    @Cacheable(value = "CategoryService::findByName", key="#name")
     @Override
     public Category findByName(final String name) {
         log.debug("Attempting to find category by name: {}", name);

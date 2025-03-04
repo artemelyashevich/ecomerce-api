@@ -2,6 +2,7 @@ package com.elyashevich.product.api.controller;
 
 import com.elyashevich.product.api.dto.ProductDto;
 import com.elyashevich.product.api.mapper.ProductMapper;
+import com.elyashevich.product.domain.entity.Product;
 import com.elyashevich.product.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -9,8 +10,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -32,12 +42,12 @@ public class ProductController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved list of products"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    public ResponseEntity<List<ProductDto>> findAll(
+    public ResponseEntity<Page<Product>> findAll(
             final @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
             final @RequestParam(value = "size", required = false, defaultValue = "5") Integer size
     ) {
         var products = this.productService.findAll(page, size);
-        return ResponseEntity.ok(this.productMapper.toDto(products));
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping("/{id}")

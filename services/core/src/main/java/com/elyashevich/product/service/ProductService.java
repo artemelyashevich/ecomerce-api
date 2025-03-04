@@ -1,6 +1,7 @@
 package com.elyashevich.product.service;
 
 import com.elyashevich.product.domain.entity.Product;
+import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public interface ProductService {
      *
      * @return a list of all products
      */
-    List<Product> findAll(final Integer page, final Integer size);
+    Page<Product> findAll(final Integer page, final Integer size);
 
     /**
      * Retrieves a product by its ID.
