@@ -63,9 +63,9 @@ public final class AuthController {
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
     public ResponseEntity<VerifyTokenResponse> verify(final @Valid @RequestBody VerifyTokenRequest verifyTokenRequest) {
-        var email = this.authService.verify(verifyTokenRequest.getToken());
+        var result = this.authService.verify(verifyTokenRequest.getToken());
         return ResponseEntity
                 .accepted()
-                .body(new VerifyTokenResponse(email));
+                .body(result);
     }
 }

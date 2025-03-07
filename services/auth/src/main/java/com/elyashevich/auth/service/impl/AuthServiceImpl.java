@@ -1,10 +1,7 @@
 package com.elyashevich.auth.service.impl;
 
 import com.elyashevich.auth.api.client.UserRestClient;
-import com.elyashevich.auth.api.dto.LoginDto;
-import com.elyashevich.auth.api.dto.RegisterDto;
-import com.elyashevich.auth.api.dto.ResetPasswordDto;
-import com.elyashevich.auth.api.dto.JwtResponse;
+import com.elyashevich.auth.api.dto.*;
 import com.elyashevich.auth.domain.RefreshToken;
 import com.elyashevich.auth.domain.Role;
 import com.elyashevich.auth.domain.UserEntity;
@@ -64,8 +61,10 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String verify(final String token) {
-        return TokenUtil.extractEmailClaims(token);
+    public VerifyTokenResponse verify(final String token) {
+        var email = TokenUtil.extractEmailClaims(token);
+        var roles = TokenUtil.getRoles(token).stream().map(SimpleGrantedAuthority::getAuthority).toList();
+        return new VerifyTokenResponse(email, roles);
     }
 
     private static UserDetails convertToUserDetails(final UserEntity userEntity) {

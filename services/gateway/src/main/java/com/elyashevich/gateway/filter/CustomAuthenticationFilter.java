@@ -4,7 +4,6 @@ import com.elyashevich.gateway.dto.VerifyRequest;
 import com.elyashevich.gateway.dto.VerifyResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
@@ -57,7 +56,7 @@ public class CustomAuthenticationFilter extends AbstractGatewayFilterFactory<Cus
                     .orElse(null);
             return jwt != null
                     ? validateToken(exchange, chain, jwt)
-                    : handleInvalidAccess(exchange, MISSING_JWT_TOKEN);
+                    : handleInvalidAccess(HttpStatus.UNAUTHORIZED, exchange, MISSING_JWT_TOKEN);
         };
     }
 
@@ -74,20 +73,25 @@ public class CustomAuthenticationFilter extends AbstractGatewayFilterFactory<Cus
                 .bodyToMono(VerifyResponse.class)
                 .flatMap(response -> {
                     if (response == null || response.getEmail() == null) {
-                        return handleInvalidAccess(exchange, "Invalid token response");
+                        return handleInvalidAccess(HttpStatus.UNAUTHORIZED, exchange, "Invalid token response");
                     }
                     var mutatedRequest = exchange.getRequest().mutate()
                             .header("X-User-Email", response.getEmail())
                             .build();
+                    if (RouteValidator.isAdminRequest.test(exchange.getRequest())) {
+                        if (!response.getRoles().contains("ROLE_ADMIN")) {
+                            return handleInvalidAccess(HttpStatus.FORBIDDEN, exchange, "Invalid role...");
+                        }
+                    }
                     var mutatedExchange = exchange.mutate().request(mutatedRequest).build();
                     return chain.filter(mutatedExchange);
                 })
-                .onErrorResume(e -> handleInvalidAccess(exchange, "Token validation failed"));
+                .onErrorResume(e -> handleInvalidAccess(HttpStatus.UNAUTHORIZED, exchange, "Token validation failed"));
     }
 
-    private Mono<Void> handleInvalidAccess(final ServerWebExchange exchange, final String errorMessage) {
+    private Mono<Void> handleInvalidAccess(final HttpStatus status, final ServerWebExchange exchange, final String errorMessage) {
         var response = exchange.getResponse();
-        response.setStatusCode(HttpStatus.UNAUTHORIZED);
+        response.setStatusCode(status);
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
         var res = Mono.just(response.bufferFactory().wrap(errorMessage.getBytes()));

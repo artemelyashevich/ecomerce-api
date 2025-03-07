@@ -1,9 +1,6 @@
 package com.elyashevich.auth.service;
 
-import com.elyashevich.auth.api.dto.LoginDto;
-import com.elyashevich.auth.api.dto.RegisterDto;
-import com.elyashevich.auth.api.dto.ResetPasswordDto;
-import com.elyashevich.auth.api.dto.JwtResponse;
+import com.elyashevich.auth.api.dto.*;
 
 /**
  * Service interface for authentication and authorization.
@@ -35,5 +32,5 @@ public interface AuthService {
      * @param token the token to verify
      * @return the result of the token verification
      */
-    String verify(final String token);
+    VerifyTokenResponse verify(final String token);
 }
